@@ -62,6 +62,7 @@ Antigravity 是 Google 推出的新一代 AI 编程平台，最新版更强调 *
 ```bash
 node -v
 ```
+---
 可以直接喂给 antigravity 或者其他 ai 直接使用，
 一键复制使用
 ```bash
