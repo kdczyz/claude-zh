@@ -529,22 +529,24 @@ overlay = """
   }
 
   function translateNode(root) {
-    if (!root || shouldSkip(root)) return;
+    if (!root) return;
+    if (root.nodeType === Node.ELEMENT_NODE) translateElement(root);
+    if (shouldSkip(root)) return;
+    
     if (root.nodeType === Node.TEXT_NODE) {
       const translated = translate(root.nodeValue || "");
       if (translated !== root.nodeValue) root.nodeValue = translated;
       return;
     }
     if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
-    if (root.nodeType === Node.ELEMENT_NODE) translateElement(root);
+    
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (node.nodeType === Node.ELEMENT_NODE) translateElement(node);
       if (shouldSkip(node)) continue;
       if (node.nodeType === Node.TEXT_NODE) {
         const translated = translate(node.nodeValue || "");
         if (translated !== node.nodeValue) node.nodeValue = translated;
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        translateElement(node);
       }
     }
   }
