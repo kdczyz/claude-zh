@@ -251,7 +251,16 @@ translations = {
     "Allow bypass permissions mode": "允许绕过权限模式",
     "Bypass all permission checks and let Claude work uninterrupted. This works well for workflows like fixing lint errors or generating boilerplate code. Letting Claude run arbitrary commands is risky and can result in data loss, system corruption, or data exfiltration (e.g., via prompt injection attacks). See best practices for safe usage": "绕过所有权限检查并让 Claude 不间断地工作。这非常适合修复 lint 错误或生成样板代码等工作流。让 Claude 运行任意命令存在风险，可能导致数据丢失、系统损坏或数据泄露（例如，通过提示注入攻击）。查看安全使用最佳实践",
     "See best practices for safe usage": "查看安全使用最佳实践",
-    "English (United States)": "简体中文 (中国)"
+    "English (United States)": "简体中文 (中国)",
+    "New task": "新建任务",
+    "Projects": "项目",
+    "Scheduled": "已排期",
+    "Live artifacts": "动态作品",
+    "Customize": "自定义",
+    "Recents": "最近记录",
+    "View all": "查看全部",
+    "New conversation": "新建对话",
+    "More": "更多"
 }
 
 patched = 0
@@ -445,7 +454,16 @@ overlay = """
     ["See best practices for safe usage", "查看安全使用最佳实践"],
     ["English (United States)", "简体中文 (中国)"],
     ["The Little Prince", "小王子"],
-    ["Pride and Prejudice", "傲慢与偏见"]
+    ["Pride and Prejudice", "傲慢与偏见"],
+    ["New task", "新建任务"],
+    ["Projects", "项目"],
+    ["Scheduled", "已排期"],
+    ["Live artifacts", "动态作品"],
+    ["Customize", "自定义"],
+    ["Recents", "最近记录"],
+    ["View all", "查看全部"],
+    ["New conversation", "新建对话"],
+    ["More", "更多"]
   ]);
 
   const patterns = [
