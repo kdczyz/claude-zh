@@ -225,7 +225,30 @@ translations = {
     "Organize my screenshots": "整理我的截图",
     "Find insights in files": "在文件中寻找洞察",
     "Customize with plugins": "使用插件自定义",
-    "Pick a task, any task": "挑选一个任务，任意任务"
+    "Pick a task, any task": "挑选一个任务，任意任务",
+    "Language": "语言",
+    "Learn more": "了解更多",
+    "Copied to clipboard": "已复制到剪贴板",
+    "Theme": "主题",
+    "Light": "浅色",
+    "Mid": "中等",
+    "Dark": "深色",
+    "System": "跟随系统",
+    "Interface font": "界面字体",
+    "Font for the Claude Code interface — menus, sidebar, and chat.": "Claude Code 界面的字体 — 菜单、侧边栏和聊天。",
+    "Transcript text size": "对话文本大小",
+    "Size of the conversation transcript text.": "对话文本的字体大小。",
+    "Small": "小",
+    "Medium": "中",
+    "Large": "大",
+    "Code appearance": "代码外观",
+    "Code font": "代码字体",
+    "Set a custom monospace font for code and terminal.": "为代码和终端设置自定义等宽字体。",
+    "Local sessions": "本地会话",
+    "Allow bypass permissions mode": "允许绕过权限模式",
+    "Bypass all permission checks and let Claude work uninterrupted. This works well for workflows like fixing lint errors or generating boilerplate code. Letting Claude run arbitrary commands is risky and can result in data loss, system corruption, or data exfiltration (e.g., via prompt injection attacks). See best practices for safe usage": "绕过所有权限检查并让 Claude 不间断地工作。这非常适合修复 lint 错误或生成样板代码等工作流。让 Claude 运行任意命令存在风险，可能导致数据丢失、系统损坏或数据泄露（例如，通过提示注入攻击）。查看安全使用最佳实践",
+    "See best practices for safe usage": "查看安全使用最佳实践",
+    "English (United States)": "简体中文 (中国)"
 }
 
 patched = 0
@@ -394,7 +417,32 @@ overlay = """
     ["Organize my screenshots", "整理我的截图"],
     ["Find insights in files", "在文件中寻找洞察"],
     ["Customize with plugins", "使用插件自定义"],
-    ["Pick a task, any task", "挑选一个任务，任意任务"]
+    ["Pick a task, any task", "挑选一个任务，任意任务"],
+    ["Language", "语言"],
+    ["Learn more", "了解更多"],
+    ["Copied to clipboard", "已复制到剪贴板"],
+    ["Theme", "主题"],
+    ["Light", "浅色"],
+    ["Mid", "中等"],
+    ["Dark", "深色"],
+    ["System", "跟随系统"],
+    ["Interface font", "界面字体"],
+    ["Font for the Claude Code interface — menus, sidebar, and chat.", "Claude Code 界面的字体 — 菜单、侧边栏和聊天。"],
+    ["Transcript text size", "对话文本大小"],
+    ["Size of the conversation transcript text.", "对话文本的字体大小。"],
+    ["Small", "小"],
+    ["Medium", "中"],
+    ["Large", "大"],
+    ["Code appearance", "代码外观"],
+    ["Code font", "代码字体"],
+    ["Set a custom monospace font for code and terminal.", "为代码和终端设置自定义等宽字体。"],
+    ["Local sessions", "本地会话"],
+    ["Allow bypass permissions mode", "允许绕过权限模式"],
+    ["Bypass all permission checks and let Claude work uninterrupted. This works well for workflows like fixing lint errors or generating boilerplate code. Letting Claude run arbitrary commands is risky and can result in data loss, system corruption, or data exfiltration (e.g., via prompt injection attacks). See best practices for safe usage", "绕过所有权限检查并让 Claude 不间断地工作。这非常适合修复 lint 错误或生成样板代码等工作流。让 Claude 运行任意命令存在风险，可能导致数据丢失、系统损坏或数据泄露（例如，通过提示注入攻击）。查看安全使用最佳实践"],
+    ["See best practices for safe usage", "查看安全使用最佳实践"],
+    ["English (United States)", "简体中文 (中国)"],
+    ["The Little Prince", "小王子"],
+    ["Pride and Prejudice", "傲慢与偏见"]
   ]);
 
   const patterns = [
@@ -407,8 +455,7 @@ overlay = """
     [/New session in (.+)/g, "在 $1 中新建会话"],
     [/Trust (.+) and start a Cowork task\?/g, "信任 $1 并开始协作任务？"],
     [/Trust (.+) and start a code session\?/g, "信任 $1 并开始代码会话？"],
-    [/You'"'"'ve used ~(.+)x more tokens than The Little Prince\./g, "你使用的 Token 数比《小王子》多了约 $1 倍。"],
-    [/You’ve used ~(.+)x more tokens than The Little Prince\./g, "你使用的 Token 数比《小王子》多了约 $1 倍。"]
+    [/You(?:'"'"'|’)ve used ~(.+)x more tokens than ([^.]+)\./g, "你使用的 Token 数比《$2》多了约 $1 倍。"]
   ];
 
   function escapeRegExp(value) {
