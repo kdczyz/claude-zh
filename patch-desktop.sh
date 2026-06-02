@@ -582,8 +582,15 @@ print(f"成功注入汉化代码到 {count} 个前端 HTML 文件！")
   log "正在执行试运行以窃取真实的 ASAR Integrity 哈希值..."
   codesign --force --deep --sign - --entitlements /tmp/claude_entitlements.plist "$APP_PATH" 2>/dev/null || true
   
+  # 临时屏蔽系统的崩溃弹窗，防止因为我们诱导崩溃而打扰用户
+  defaults write com.apple.CrashReporter DialogType none 2>/dev/null || true
+  
   # 执行试运行并捕获报错中的真实哈希
   CRASH_LOG=$("$APP_PATH/Contents/MacOS/Claude" 2>&1 || true)
+  
+  # 恢复系统的崩溃弹窗设置
+  defaults delete com.apple.CrashReporter DialogType 2>/dev/null || true
+  
   CORRECT_HASH=$(echo "$CRASH_LOG" | grep -o "vs [a-f0-9]*)" | sed 's/vs \([a-f0-9]*\))/\1/')
   
   if [ -n "$CORRECT_HASH" ]; then
