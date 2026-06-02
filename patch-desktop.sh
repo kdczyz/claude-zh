@@ -99,8 +99,11 @@ restore() {
 
 quit_claude() {
   if pgrep -x "Claude" >/dev/null 2>&1; then
-    log "正在退出 Claude..."
-    osascript -e 'tell application "Claude" to quit' >/dev/null 2>&1 || true
+    log "正在优雅退出 Claude..."
+    osascript -e 'quit app "Claude"' 2>/dev/null || true
+    sleep 1.5
+    # 作为兜底，如果程序卡死未退出，再清理残余主进程
+    pkill -x "Claude" 2>/dev/null || true
     sleep 2
   fi
 }
@@ -562,8 +565,17 @@ print(f"成功注入汉化代码到 {count} 个前端 HTML 文件！")
   npx -y @electron/asar pack "$asar_dir" "$RES_DIR/app.asar" --unpack-dir "node_modules"
   rm -rf "$asar_dir"
   
-  log "正在为 Info.plist 设置诱导校验哈希并剥离 ElectronTeamID..."
-  /usr/libexec/PlistBuddy -c "Set :ElectronAsarIntegrity:Resources/app.asar:hash DUMMY_HASH" "$APP_PATH/Contents/Info.plist" 2>/dev/null || true
+  log "正在为 Info.plist 设置真实的 ASAR Integrity 哈希并剥离 ElectronTeamID..."
+  # 用 Python 算法直接解析 ASAR 头部并计算出真正的 SHA256 哈希，彻底告别崩溃试运行！
+  CORRECT_HASH=$(python3 -c "import struct, hashlib; f=open('$APP_PATH/Contents/Resources/app.asar', 'rb'); data=f.read(16); _,_,_,s=struct.unpack('<IIII', data); print(hashlib.sha256(f.read(s)).hexdigest())")
+  
+  if [ -n "$CORRECT_HASH" ]; then
+    log "成功计算出原生内部校验哈希: $CORRECT_HASH"
+    /usr/libexec/PlistBuddy -c "Set :ElectronAsarIntegrity:Resources/app.asar:hash $CORRECT_HASH" "$APP_PATH/Contents/Info.plist" 2>/dev/null || true
+  else
+    die "无法计算 ASAR 哈希！"
+  fi
+  
   /usr/libexec/PlistBuddy -c "Delete :ElectronTeamID" "$APP_PATH/Contents/Info.plist" 2>/dev/null || true
   
   log "前端 HTML 汉化完成！"
@@ -579,39 +591,8 @@ print(f"成功注入汉化代码到 {count} 个前端 HTML 文件！")
   /usr/libexec/PlistBuddy -c "Delete :com.apple.developer.team-identifier" /tmp/claude_entitlements.plist 2>/dev/null || true
   /usr/libexec/PlistBuddy -c "Delete :keychain-access-groups" /tmp/claude_entitlements.plist 2>/dev/null || true
   
-  log "正在执行试运行以窃取真实的 ASAR Integrity 哈希值..."
+  log "正在进行最终的本地代码重签..."
   codesign --force --deep --sign - --entitlements /tmp/claude_entitlements.plist "$APP_PATH" 2>/dev/null || true
-  
-  # 派出一个后台静默进程，每隔0.2秒循环猎杀系统的崩溃弹窗
-  (
-    for i in {1..20}; do
-      killall "Crash Reporter" 2>/dev/null || true
-      killall ReportCrash 2>/dev/null || true
-      sleep 0.2
-    done
-  ) &
-  KILLER_PID=$!
-  
-  # 执行试运行并捕获报错中的真实哈希
-  CRASH_LOG=$("$APP_PATH/Contents/MacOS/Claude" 2>&1 || true)
-  
-  # 撤回后台猎杀进程，并做最后一次清扫
-  kill $KILLER_PID 2>/dev/null || true
-  killall "Crash Reporter" 2>/dev/null || true
-  killall ReportCrash 2>/dev/null || true
-  
-  CORRECT_HASH=$(echo "$CRASH_LOG" | grep -o "vs [a-f0-9]*)" | sed 's/vs \([a-f0-9]*\))/\1/')
-  
-  if [ -n "$CORRECT_HASH" ]; then
-    log "成功窃取到原生内部校验哈希: $CORRECT_HASH"
-    /usr/libexec/PlistBuddy -c "Set :ElectronAsarIntegrity:Resources/app.asar:hash $CORRECT_HASH" "$APP_PATH/Contents/Info.plist" 2>/dev/null || true
-    
-    log "正在进行最终的本地代码重签..."
-    codesign --force --deep --sign - --entitlements /tmp/claude_entitlements.plist "$APP_PATH" 2>/dev/null || true
-  else
-    log "警告: 未能提取出真实的内部哈希，跳过自动修复。应用可能会闪退。"
-    echo "详细日志: $CRASH_LOG"
-  fi
   
   log "补丁完成。请完全退出并重新打开 Claude。"
 }
