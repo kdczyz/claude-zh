@@ -260,7 +260,14 @@ translations = {
     "Recents": "最近记录",
     "View all": "查看全部",
     "New conversation": "新建对话",
-    "More": "更多"
+    "More": "更多",
+    "What can I help you with today?": "今天我能帮你做些什么？",
+    "New Chat": "新建对话",
+    "Quickly share content with Claude": "快捷地与 Claude 分享内容",
+    "Needs additional permission": "需要额外权限",
+    "Turn on screenshots": "开启屏幕截图",
+    "Turn on file sharing": "开启文件共享",
+    "Not now": "暂不"
 }
 
 patched = 0
@@ -463,7 +470,14 @@ overlay = """
     ["Recents", "最近记录"],
     ["View all", "查看全部"],
     ["New conversation", "新建对话"],
-    ["More", "更多"]
+    ["More", "更多"],
+    ["What can I help you with today?", "今天我能帮你做些什么？"],
+    ["New Chat", "新建对话"],
+    ["Quickly share content with Claude", "快捷地与 Claude 分享内容"],
+    ["Needs additional permission", "需要额外权限"],
+    ["Turn on screenshots", "开启屏幕截图"],
+    ["Turn on file sharing", "开启文件共享"],
+    ["Not now", "暂不"]
   ]);
 
   const patterns = [
