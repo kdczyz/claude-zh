@@ -267,7 +267,9 @@ translations = {
     "Needs additional permission": "需要额外权限",
     "Turn on screenshots": "开启屏幕截图",
     "Turn on file sharing": "开启文件共享",
-    "Not now": "暂不"
+    "Not now": "暂不",
+    "Cowork": "协作",
+    "Code": "代码"
 }
 
 patched = 0
@@ -477,7 +479,9 @@ overlay = """
     ["Needs additional permission", "需要额外权限"],
     ["Turn on screenshots", "开启屏幕截图"],
     ["Turn on file sharing", "开启文件共享"],
-    ["Not now", "暂不"]
+    ["Not now", "暂不"],
+    ["Cowork", "协作"],
+    ["Code", "代码"]
   ]);
 
   const patterns = [
@@ -494,14 +498,14 @@ overlay = """
   ];
 
   function escapeRegExp(value) {
-    return value.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&");
+    return value.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/ /g, "\\s+");
   }
 
   function replacePhrase(value, source, target) {
     const escaped = escapeRegExp(source);
     const startsWord = /^[A-Za-z0-9]/.test(source);
     const endsWord = /[A-Za-z0-9]$/.test(source);
-    const pattern = new RegExp((startsWord ? "(?<![A-Za-z0-9])" : "") + escaped + (endsWord ? "(?![A-Za-z0-9])" : ""), "g");
+    const pattern = new RegExp((startsWord ? "(?<![A-Za-z0-9])" : "") + escaped + (endsWord ? "(?![A-Za-z0-9])" : ""), "gi");
     return value.replace(pattern, target);
   }
 
